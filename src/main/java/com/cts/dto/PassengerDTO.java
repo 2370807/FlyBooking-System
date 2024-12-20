@@ -20,7 +20,7 @@ public class PassengerDTO {
 	public String useremail;
 	
 	@NotBlank
-	@Pattern(regexp = "^\\d{10}$")
+	@Pattern(regexp = "^\\d{10}$",message="Mobile number should be 10 digits")
 	public long phonenumber;
 	
 	@NotBlank
