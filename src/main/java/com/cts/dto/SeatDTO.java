@@ -1,5 +1,6 @@
 package com.cts.dto;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,8 @@ public class SeatDTO {
 	private String fightnumber;
 	@NotBlank(message="Enter valid class id")
 	private long id;
-	@NotBlank(message="Either enter true or false")
+	//@NotBlank(message="Either enter true or false")
+	@AssertTrue(message="The available seat must be true")
 	private boolean isavailable;
 	@NotBlank(message="Enter the valid seatnumber")
 	private long seatnumber;
