@@ -1,0 +1,17 @@
+{
+    "seatnumber":101,
+    "isAvailable":true,
+    "flight":{
+            "flightnumber":"AIR4321",
+            "airline":"AIR-INDIA",
+            "source":"Chennai",
+            "desination":"Coimbatore",
+            "departure_time":"10:00",
+            "arrival_time":"12:00",
+            "price":320000,
+            "seat":[]
+            },
+            "seatClass":{ 
+                            "className": "Economy"
+                        }
+}
