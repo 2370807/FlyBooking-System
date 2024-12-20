@@ -28,7 +28,7 @@ public class Passenger {
 	
 	public String useremail;
 	
-	public long phonenumber;
+	public String phonenumber;
 	
 	public String name;
 	

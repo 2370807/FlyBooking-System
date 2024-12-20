@@ -21,14 +21,16 @@ public class PassengerDTO {
 	
 	@NotBlank
 	@Pattern(regexp = "^\\d{10}$",message="Mobile number should be 10 digits")
-	public long phonenumber;
+	public String phonenumber;
 	
-	@NotBlank
+	@NotBlank(message="The name cannot be empty")
 	public String name;
 	
 	@NotBlank
+	@Pattern( regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$",
+	message = "Password must be at least 8 characters long, contain at least one digit, one lowercase letter, one uppercase letter, and one special character.")
 	public String password;
 	
-	@NotBlank
+	@NotBlank(message="The role Allocation is mandatory")
 	public String roles;
 }

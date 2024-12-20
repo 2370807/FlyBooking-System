@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cts.model.Seat;
 import com.cts.service.SeatService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/seat")
 public class SeatController {
@@ -24,7 +26,7 @@ public class SeatController {
 	private SeatService seatService;
 	
 	@PostMapping("/newseat")
-	public ResponseEntity<String> addseat(@RequestBody SeatDTO seatDTO)
+	public ResponseEntity<String> addseat(@RequestBody @Valid SeatDTO seatDTO)
 	{
 		return seatService.createSeat(seatDTO);
 	}

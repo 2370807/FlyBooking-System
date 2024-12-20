@@ -18,6 +18,8 @@ import com.cts.dto.PassengerDTO;
 import com.cts.model.Passenger;
 import com.cts.service.PassengerService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/User")
 public class PassengerController {
@@ -41,14 +43,14 @@ public class PassengerController {
 	 
 	 
 	 @PutMapping("/Updateuser/{id}")
-	 public Passenger updateUser(@PathVariable("id") Long userId, @RequestBody PassengerDTO userdto)
+	 public Passenger updateUser(@PathVariable("id") Long userId, @RequestBody @Valid  PassengerDTO userdto)
 	 {
 		 return userService.update(userId,userdto);
 	 }
 	 
 	 
 	 @PostMapping("/register/{username}/{useremail}/{password}")
-	 public ResponseEntity<String> registerNewUser(@PathVariable("username") String username,@PathVariable("useremail") String useremail,@PathVariable("password") String password,@RequestBody PassengerDTO userdto)
+	 public ResponseEntity<String> registerNewUser(@PathVariable("username") String username,@PathVariable("useremail") String useremail,@PathVariable("password") String password,@RequestBody  @Valid PassengerDTO userdto)
 	 { 
 		return  userService.createUser(username,useremail,password,userdto);
 	 }

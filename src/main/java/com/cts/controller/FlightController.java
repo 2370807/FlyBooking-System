@@ -13,6 +13,8 @@ import com.cts.dto.FlightDTO;
 import com.cts.model.Flight;
 import com.cts.service.FlightService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/flight")
 public class FlightController {
@@ -27,13 +29,13 @@ public class FlightController {
 	}
 	
 	@PostMapping("/newflight")
-	public ResponseEntity<String> addnewFlight(@RequestBody FlightDTO flightdto)
+	public ResponseEntity<String> addnewFlight(@RequestBody @Valid FlightDTO flightdto)
 	{
 		return flightService.createflight(flightdto);
 	}
 	
 	@PutMapping("/updatedetails/{flightid}")
-	public ResponseEntity<String> updateFlightAllDetails(@PathVariable String flightid,@RequestBody FlightDTO flightdto)
+	public ResponseEntity<String> updateFlightAllDetails(@PathVariable String flightid,@RequestBody @Valid FlightDTO flightdto)
 	{
 		return flightService.updateflight(flightid, flightdto);
 	}

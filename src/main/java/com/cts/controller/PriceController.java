@@ -17,6 +17,8 @@ import com.cts.dto.PriceDTO;
 import com.cts.model.Price;
 import com.cts.service.PriceService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/seatclass")
 public class PriceController {
@@ -25,14 +27,14 @@ public class PriceController {
 	private PriceService  priceService;
 	
 	@PostMapping("/newclass")
-	public ResponseEntity<String> addnewClass(@RequestBody PriceDTO pricedto)
+	public ResponseEntity<String> addnewClass(@RequestBody @Valid PriceDTO pricedto)
 	{
 		priceService.createclass(pricedto);
 		return ResponseEntity.status(HttpStatus.OK).body("SeatClass Added Successfully");
 	}
 	
 	@PutMapping("/updateclass/{id}")
-	public ResponseEntity<String> updateprice(@PathVariable long id,@RequestBody PriceDTO pricedto)
+	public ResponseEntity<String> updateprice(@PathVariable long id,@RequestBody @Valid PriceDTO pricedto)
 	{
 		priceService.updateclassandprice(id, pricedto);
 		return ResponseEntity.status(HttpStatus.OK).body("Updated seat successfully");

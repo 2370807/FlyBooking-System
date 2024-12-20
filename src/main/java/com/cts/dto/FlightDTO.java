@@ -32,10 +32,10 @@ public class FlightDTO {
 	@NotBlank(message="Destination cannot be blank")
 	private String desitination;
 	
-	@NotBlank(message="Departure time cannot be empty")
+	//@NotBlank(message="Departure time cannot be empty")
 	private LocalTime departure_time;
 	
-	@NotBlank(message="Arrival time cannot be empty")
+	//@NotBlank(message="Arrival time cannot be empty")
 	private LocalTime arrival_time;
 	
 }
