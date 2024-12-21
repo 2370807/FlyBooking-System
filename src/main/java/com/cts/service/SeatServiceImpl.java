@@ -39,7 +39,7 @@ public class SeatServiceImpl implements SeatService  {
 		 Seat seat=new Seat();
 		 seat.setFlight(flight1); 
 		 //seat.setSeatClass(seatClass1);
-		 seat.setSeatnumber(seatDTO.getSeatnumber()); 
+		 seat.setSeatnumber((Long.valueOf(seatDTO.getSeatnumber()))); 
 		 seat.setIsavailable(seatDTO.isIsavailable());
 		 seat.setPrices(price);
 		 flight1.getSeats().add(seat);
@@ -62,9 +62,9 @@ public class SeatServiceImpl implements SeatService  {
 		return ResponseEntity.status(HttpStatus.OK).body("Seat removed");
 	}
 	@Override
-	public List<Seat> findAll() {
+	public List<Seat> findAll(String flightnumber) {
 		// TODO Auto-generated method stub
-		return seatRepository.findAll();
+		return seatRepository.findByFlight_Flightnumber(flightnumber);
 	}
 	
 	

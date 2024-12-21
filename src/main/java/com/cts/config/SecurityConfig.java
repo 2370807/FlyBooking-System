@@ -1,6 +1,5 @@
 package com.cts.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -20,8 +19,11 @@ import com.cts.service.UserService;
 @EnableMethodSecurity
 public class SecurityConfig {
 	
-	@Autowired
-	private UserService userService;
+	@Bean
+	public UserService userService()
+	{
+		return new UserService();
+	}
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -32,10 +34,12 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
 	{
 		http.csrf((csrf)-> csrf.disable())
-		.authorizeHttpRequests((authorize)->{
-			authorize.requestMatchers("/Passenger/register/**","/Passenger/login/**","/Booking/intiatebooking/**").permitAll();
-			authorize.anyRequest().authenticated();
-		}).httpBasic(Customizer.withDefaults());
+		.authorizeHttpRequests((authorize)->authorize
+			.requestMatchers("/Passenger/register/**","/Passenger/login/**","/Booking/intiatebooking/**").permitAll()
+			.anyRequest().authenticated()
+		)
+		.formLogin(Customizer.withDefaults())
+		.httpBasic(Customizer.withDefaults());
 		return http.build();
 	}
 	
@@ -43,8 +47,8 @@ public class SecurityConfig {
 	public AuthenticationProvider authenticationProvider()
 	{
 		DaoAuthenticationProvider authenticationProvider=new DaoAuthenticationProvider();
-		authenticationProvider.setUserDetailsService(userService);
+		authenticationProvider.setUserDetailsService(userService());
 		authenticationProvider.setPasswordEncoder(passwordEncoder());
-		return authenticationProvider();
+		return authenticationProvider;
 	}
 }

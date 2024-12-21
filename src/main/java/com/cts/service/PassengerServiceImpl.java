@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.cts.dto.PassengerDTO;
@@ -16,6 +17,9 @@ public class PassengerServiceImpl implements PassengerService {
 	
 	@Autowired
 	public PassengerRepository userRepository;
+	
+	@Autowired
+	public PasswordEncoder passwordEncode;
 	
 	@Override
 	public List<Passenger> findAll() {
@@ -53,7 +57,7 @@ public class PassengerServiceImpl implements PassengerService {
 	@Override
 	public ResponseEntity<String> createUser(String username,String useremail,String password,PassengerDTO userdto) {
 		
-		if(userRepository.findByUseremailAndPassword(useremail,password)!=null)
+		if(userRepository.findByUseremail(useremail)!=null)
 		{
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already exist");
 		}
@@ -64,7 +68,7 @@ public class PassengerServiceImpl implements PassengerService {
 		Passenger user= Passenger.builder()
 				.username(username)
 				.useremail(useremail)
-				.password(password)
+				.password(passwordEncode.encode(password))
 				.phonenumber(userdto.getPhonenumber())
 				.name(userdto.getName())
 				.roles(userdto.getRoles())
@@ -74,18 +78,19 @@ public class PassengerServiceImpl implements PassengerService {
 	}
 	
 	@Override
-	public ResponseEntity<String> loginUser(String useremail, String password) {
+	public ResponseEntity<String> loginUser(String username, String password) {
 		// TODO Auto-generated method stub
-		Passenger user =userRepository.findByUseremailAndPassword(useremail,password);
+		Passenger user =userRepository.findByUsername(username);
 		if(user==null)
 		{
 			return ResponseEntity.status(404).body("User not found please register");
 		}
-		if(user.getPassword().equals(password) && user!=null)
+		boolean passwordmatch =passwordEncode.matches(password,user.getPassword());
+		if(passwordmatch)
 		{
 			return ResponseEntity.ok("Login successful");
 		}
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid useremail or password");
 	}
 
 

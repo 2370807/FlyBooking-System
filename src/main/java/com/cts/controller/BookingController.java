@@ -2,6 +2,7 @@ package com.cts.controller;
 
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cts.dto.BookingDTO;
-import com.cts.model.Booking;
 import com.cts.service.BookingService;
 
 @RestController
@@ -24,11 +24,11 @@ public class BookingController {
 	@Autowired
 	private BookingService bookingService; 
 	
-	@PostMapping("/intiatebooking/{userId}/{flightnumber}/{seatId}")//--give booking dto
+	@PostMapping("/intiatebooking/{userId}/{flightnumber}/{seatId}/{no_of_seat}/{BookingDate}")//--give booking dto
 	//@PreAuthorize("hasRole('ROLE_USER')")
-	public ResponseEntity<String> createBooking(@PathVariable long userId, @PathVariable String flightnumber, @PathVariable long seatId) 
+	public ResponseEntity<String> createBooking(@PathVariable long userId, @PathVariable String flightnumber, @PathVariable long seatId,@PathVariable int no_of_seat,@PathVariable LocalDate BookingDate) 
 	{ 
-		return bookingService.createBooking(userId, flightnumber, seatId); 
+		return bookingService.createBooking(userId, flightnumber, seatId,no_of_seat,BookingDate); 
 		//return ResponseEntity.status(HttpStatus.OK).body(bookingService.createBooking(userId, flightnumber, seatId));
 	} 
 	

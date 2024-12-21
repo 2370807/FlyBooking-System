@@ -36,4 +36,6 @@ public class BookingDTO {
 	private long price;
 	
 	private String status;
+	
+	private int no_of_seats;
 }

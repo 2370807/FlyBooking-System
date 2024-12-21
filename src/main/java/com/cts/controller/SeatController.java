@@ -46,4 +46,11 @@ public class SeatController {
 	{ 
 		seatService.removeSeat(seatnumber);
 	}
+	
+	@GetMapping("/allseatsofthisflight/{flightnumber}")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+	public List<Seat> getAllSeats(@PathVariable String flightnumber)
+	{
+		return seatService.findAll(flightnumber);
+	}
 }

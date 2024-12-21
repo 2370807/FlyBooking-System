@@ -14,13 +14,13 @@ public class SeatDTO {
 
 	@NotBlank(message="flight number cannot be null")
 	private String fightnumber;
-	@NotBlank(message="Enter valid class id")
-	private long id;
+//	@NotBlank(message="Enter valid class id")
+//	private String id;
 	//@NotBlank(message="Either enter true or false")
 	@AssertTrue(message="The available seat must be true")
 	private boolean isavailable;
 	@NotBlank(message="Enter the valid seatnumber")
-	private long seatnumber;
+	private String seatnumber;
 	@NotBlank(message="Enter valid Seatclass")
 	private String seatclass;
 }

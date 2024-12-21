@@ -35,6 +35,7 @@ public class Booking {
 	@JoinColumn(name = "seat_id", nullable = false) 
 	private Seat seat; 
 	
+	private int no_of_seats;
 	private LocalDate bookingDate; 
 	private String status;
 }

@@ -38,9 +38,8 @@ public class BookingServiceImpl implements BookingService{
 	private SeatRepository seatRepository;
 	
 	@Override
-	public ResponseEntity<String> createBooking(long userId, String flightnumber, long seatId)
+	public ResponseEntity<String> createBooking(long userId, String flightnumber, long seatId ,int no_of_seats,LocalDate BookingDate)
 	{ 
-		System.out.println("Hari");
 		Passenger user = userRepository.findById(userId)
 				.orElseThrow(() -> new RuntimeException("User not found")); 
 		Flight flight = flightRepository.findByFlightnumber(flightnumber)
@@ -54,7 +53,8 @@ public class BookingServiceImpl implements BookingService{
 		{
 			booking.setSeat(seat);
 			seat.setIsavailable(false);
-			booking.setBookingDate(LocalDate.now()); 
+			booking.setBookingDate(BookingDate);
+			booking.setNo_of_seats(no_of_seats);
 			booking.setStatus("CONFIRMED"); 
 			bookingRepository.save(booking);
 			return ResponseEntity.status(HttpStatus.OK).body("Booking is successfully made!");
@@ -84,8 +84,9 @@ public class BookingServiceImpl implements BookingService{
 		bookingDTO.setSeatNumber(booking.getSeat().getSeatnumber()); 
 		bookingDTO.setBookingDate(booking.getBookingDate()); 
 		bookingDTO.setStatus(booking.getStatus()); 
-		bookingDTO.setPrice(totalprice(2, booking.getSeat().getPrices().getPrice()));
+		bookingDTO.setPrice(totalprice(booking.getNo_of_seats(), booking.getSeat().getPrices().getPrice()));
 		bookingDTO.setSeatClass(booking.getSeat().getPrices().getClassname());
+		bookingDTO.setNo_of_seats(booking.getNo_of_seats());
 		return bookingDTO; 
 	}
 	
