@@ -10,12 +10,17 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cts.dto.PriceDTO;
 import com.cts.model.Price;
 import com.cts.repository.PriceRepository;
+import com.cts.repository.SeatRepository;
 
 @Service
 public class PriceServiceImpl implements PriceService {
 
 	@Autowired
 	private PriceRepository priceRepository;
+	
+	@Autowired
+	private SeatRepository seatRepository;
+	
 	@Override
 	public Price createclass(PriceDTO priceDTO) {
 		// TODO Auto-generated method stub
@@ -64,5 +69,10 @@ public class PriceServiceImpl implements PriceService {
 		// TODO Auto-generated method stub
 		return priceRepository.findAll();
 	}
+	
+//	public void getByAvailableseatbyclassname()
+//	{
+//		seatRepository.get
+//	}
 
 }

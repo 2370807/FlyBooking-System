@@ -20,7 +20,7 @@ import com.cts.model.Passenger;
 import com.cts.repository.BookingRepository;
 import com.cts.repository.FlightRepository;
 import com.cts.repository.SeatRepository;
-import com.cts.repository.UserRepository;
+import com.cts.repository.PassengerRepository;
 
 @Service
 public class BookingServiceImpl implements BookingService{
@@ -29,7 +29,7 @@ public class BookingServiceImpl implements BookingService{
 	private BookingRepository bookingRepository;
 	
 	@Autowired 
-	private UserRepository userRepository;
+	private PassengerRepository userRepository;
 	
 	@Autowired 
 	private FlightRepository flightRepository;

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +22,7 @@ import com.cts.service.PassengerService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/User")
+@RequestMapping("/Passenger")
 public class PassengerController {
 	
 	 @Autowired
@@ -36,13 +37,15 @@ public class PassengerController {
 	 
 	 
 	 @GetMapping("/GetById/{id}")
+	 @PreAuthorize("hasRole('ROLE_ADMIN')")
 	 public Optional<Passenger> getUserbyId(@PathVariable("id") Long userId)
 	 {
 		 return userService.findbyId(userId);
 	 }
 	 
 	 
-	 @PutMapping("/Updateuser/{id}")
+	 @PutMapping("/UpdatePassenger/{id}")
+	 @PreAuthorize("hasRole('ROLE_USER')")
 	 public Passenger updateUser(@PathVariable("id") Long userId, @RequestBody @Valid  PassengerDTO userdto)
 	 {
 		 return userService.update(userId,userdto);
@@ -64,6 +67,7 @@ public class PassengerController {
 	 
 	 
 	 @DeleteMapping("/remove/{id}")
+	 @PreAuthorize("hasRole('ROLE_ADMIN')")
 	 public void Removeuser(@PathVariable("id") Long userId)
 	 {
 		 userService.delete(userId);

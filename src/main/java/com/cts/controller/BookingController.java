@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ public class BookingController {
 	private BookingService bookingService; 
 	
 	@PostMapping("/intiatebooking/{userId}/{flightnumber}/{seatId}")//--give booking dto
+	//@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<String> createBooking(@PathVariable long userId, @PathVariable String flightnumber, @PathVariable long seatId) 
 	{ 
 		return bookingService.createBooking(userId, flightnumber, seatId); 
@@ -31,6 +33,7 @@ public class BookingController {
 	} 
 	
 	@GetMapping("/BookingByUser/{userId}") //--check it
+	@PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
 	public ResponseEntity<List<BookingDTO>> getBookingsByUser(@PathVariable long userId) 
 	{ 
 		List<BookingDTO> bookings = bookingService.getBookingsByUser(userId); 
@@ -38,6 +41,7 @@ public class BookingController {
 	} 
 	
 	@DeleteMapping("/cancel/{bookingId}") //--check it//check the cancelling logic well we could able to apply the same seat 2 times.
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<String> cancelBooking(@PathVariable long bookingId) 
 	{ 
 		bookingService.cancelBooking(bookingId); 
@@ -45,6 +49,7 @@ public class BookingController {
 	} 
 	
 	@PutMapping("/UpdateBooking/{bookingId}") //--check it
+	@PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
 	public ResponseEntity<String> updateBooking(@PathVariable long bookingId, @RequestBody BookingDTO bookingDTO) 
 	{ 
 		bookingService.updateBooking(bookingId, bookingDTO); 

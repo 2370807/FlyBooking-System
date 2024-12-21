@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 
 import com.cts.dto.PassengerDTO;
 import com.cts.model.Passenger;
-import com.cts.repository.UserRepository;
+import com.cts.repository.PassengerRepository;
 @Service
 public class PassengerServiceImpl implements PassengerService {
 	
 	@Autowired
-	public UserRepository userRepository;
+	public PassengerRepository userRepository;
 	
 	@Override
 	public List<Passenger> findAll() {

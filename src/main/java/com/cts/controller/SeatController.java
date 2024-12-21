@@ -5,6 +5,7 @@ import com.cts.dto.SeatDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,18 +27,21 @@ public class SeatController {
 	private SeatService seatService;
 	
 	@PostMapping("/newseat")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<String> addseat(@RequestBody @Valid SeatDTO seatDTO)
 	{
 		return seatService.createSeat(seatDTO);
 	}
 	
 	@GetMapping("/availableseat/{flightnumber}")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	public List<Seat> availableSeat(@PathVariable String flightnumber)
 	{
 		return seatService.getAvailableSeats(flightnumber);
 	}
 	
 	@DeleteMapping("/deleteseat/{seatnumber}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void deleteSeat(@PathVariable long seatnumber)
 	{ 
 		seatService.removeSeat(seatnumber);
