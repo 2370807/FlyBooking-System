@@ -1,13 +1,6 @@
 package com.cts.dto;
 
 import java.time.LocalTime;
-import java.util.List;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.cts.model.Seat;
-
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -36,11 +29,11 @@ public class FlightDTO {
 	private String desitination;
 	
 	//@NotBlank(message="Departure time cannot be empty")
-	@Future(message = "The end time must be in the future")
+//	@Future(message = "The end time must be in the future")
 	private LocalTime departure_time;
 	
 	//@NotBlank(message="Arrival time cannot be empty")
-	@Future(message = "The start time must be in the future")
+//	@Future(message = "The start time must be in the future")
 	private LocalTime arrival_time;
 
 		// TODO Auto-generated method stub
