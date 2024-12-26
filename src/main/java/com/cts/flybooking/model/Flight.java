@@ -1,6 +1,6 @@
 package com.cts.flybooking.model;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -25,8 +25,8 @@ public class Flight {
 	private String airline;
 	private String source;
 	private String desination;
-	private LocalTime departure_time;
-	private LocalTime arrival_time;
+	private LocalDateTime departure_time;
+	private LocalDateTime arrival_time;
 	
 	@OneToMany(mappedBy="flight")
 	@JsonManagedReference

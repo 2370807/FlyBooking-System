@@ -26,9 +26,9 @@ public class BookingController {
 	
 	@PostMapping("/intiatebooking/{userId}/{flightnumber}/{seatId}/{no_of_seat}/{BookingDate}")//--give booking dto
 	//@PreAuthorize("hasRole('ROLE_USER')")
-	public ResponseEntity<String> createBooking(@PathVariable long userId, @PathVariable String flightnumber, @PathVariable long seatId,@PathVariable int no_of_seat,@PathVariable LocalDate BookingDate) 
+	public ResponseEntity<String> createBooking(@PathVariable long userId, @PathVariable String flightnumber, @PathVariable long seatnumber,@PathVariable int no_of_seat,@PathVariable LocalDate BookingDate) 
 	{ 
-		return bookingService.createBooking(userId, flightnumber, seatId,no_of_seat,BookingDate); 
+		return bookingService.createBooking(userId, flightnumber, seatnumber,no_of_seat,BookingDate); 
 		//return ResponseEntity.status(HttpStatus.OK).body(bookingService.createBooking(userId, flightnumber, seatId));
 	} 
 	

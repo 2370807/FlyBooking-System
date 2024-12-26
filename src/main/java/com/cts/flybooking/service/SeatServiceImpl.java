@@ -68,6 +68,7 @@ public class SeatServiceImpl implements SeatService  {
 		logger.info("Seat removed successfully with seat number: {}", seatnumber);
 		return ResponseEntity.status(HttpStatus.OK).body("Seat removed");
 	}
+	
 	@Override
 	public List<Seat> findAll(String flightnumber) {
 		// TODO Auto-generated method stub

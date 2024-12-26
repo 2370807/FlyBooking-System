@@ -60,7 +60,7 @@ public class FlightController {
 	
 	@GetMapping("/flightbysourceanddesination/{source}/{desination}")
 	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-	public Flight findbysourceAnddesination(String source,String desination)
+	public List<Flight> findbysourceAnddesination(@PathVariable String source,@PathVariable String desination)
 	{
 		return flightService.findFlightBySourceAndDesitnation(source, desination);
 	}

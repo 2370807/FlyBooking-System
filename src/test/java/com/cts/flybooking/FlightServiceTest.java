@@ -2,7 +2,8 @@ package com.cts.flybooking;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import java.time.LocalTime;
+
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,8 +30,8 @@ public class FlightServiceTest {
 			FlightDTO flightDTO = new FlightDTO();
 			flightDTO.setFlightnumber("123"); 
 			flightDTO.setAirline("Test Airline"); 
-			flightDTO.setArrival_time((LocalTime.of(10, 0))); 
-			flightDTO.setDeparture_time((LocalTime.of(12, 0))); 
+			flightDTO.setArrival_time((LocalDateTime.of(2024, 12, 25, 10, 30))); 
+			flightDTO.setDeparture_time((LocalDateTime.of(2024, 12, 25, 12, 30))); 
 			flightDTO.setDesitination("Desitination");
 			flightDTO.setSource("Source"); 
 			ResponseEntity<String> response = flightService.createflight(flightDTO); 

@@ -41,7 +41,7 @@ public class BookingServiceImpl implements BookingService{
 	private SeatRepository seatRepository;
 	
 	@Override
-	public ResponseEntity<String> createBooking(long userId, String flightnumber, String seatnumber ,int no_of_seats,LocalDate BookingDate)
+	public ResponseEntity<String> createBooking(long userId, String flightnumber, long seatnumber ,int no_of_seats,LocalDate BookingDate)
 	{ 
 		logger.info("Creating booking for userId: {}, flightnumber: {}, seatId: {}, no_of_seats: {}, BookingDate: {}", 
 				userId, flightnumber, seatnumber, no_of_seats,BookingDate);
@@ -130,7 +130,7 @@ public class BookingServiceImpl implements BookingService{
 		} 
 		if (bookingDTO.getSeatNumber() != 0.0) 
 		{ 
-			Seat seat = seatRepository.findById(bookingDTO.getSeatNumber()) 
+			Seat seat = seatRepository.findBySeatnumber(bookingDTO.getSeatNumber()) 
 					.orElseThrow(() -> new RuntimeException("Seat not found")); 
 			booking.setSeat(seat); 
 		} 

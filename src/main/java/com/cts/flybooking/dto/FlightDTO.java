@@ -1,6 +1,6 @@
 package com.cts.flybooking.dto;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -30,11 +30,11 @@ public class FlightDTO {
 	
 	//@NotBlank(message="Departure time cannot be empty")
 //	@Future(message = "The end time must be in the future")
-	private LocalTime departure_time;
+	private LocalDateTime departure_time;
 	
 	//@NotBlank(message="Arrival time cannot be empty")
 //	@Future(message = "The start time must be in the future")
-	private LocalTime arrival_time;
+	private LocalDateTime arrival_time;
 
 		// TODO Auto-generated method stub
 		

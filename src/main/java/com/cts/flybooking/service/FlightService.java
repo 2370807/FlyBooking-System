@@ -15,6 +15,6 @@ public interface FlightService {
 	public ResponseEntity<String> deleteflight(String flightid);
 	public Optional<Flight> findflightById(String flightid);
 	public List<Flight> findAllflight();
-	public Flight findFlightBySourceAndDesitnation(String source, String desination);
+	public List<Flight> findFlightBySourceAndDesitnation(String source, String desination);
 	
 }

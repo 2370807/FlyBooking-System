@@ -78,7 +78,7 @@ public class FlightServiceImpl implements FlightService {
 		return flightRepository.findAll();
 	}
 	@Override
-	public Flight findFlightBySourceAndDesitnation(String source,String desination)
+	public List<Flight> findFlightBySourceAndDesitnation(String source,String desination)
 	{
 		logger.info("Finding flight from source: {} to destination: {}", source, desination);
 		return flightRepository.findBySourceAndDesination(source, desination);
