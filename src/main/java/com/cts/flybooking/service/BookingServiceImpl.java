@@ -41,15 +41,15 @@ public class BookingServiceImpl implements BookingService{
 	private SeatRepository seatRepository;
 	
 	@Override
-	public ResponseEntity<String> createBooking(long userId, String flightnumber, long seatId ,int no_of_seats,LocalDate BookingDate)
+	public ResponseEntity<String> createBooking(long userId, String flightnumber, String seatnumber ,int no_of_seats,LocalDate BookingDate)
 	{ 
 		logger.info("Creating booking for userId: {}, flightnumber: {}, seatId: {}, no_of_seats: {}, BookingDate: {}", 
-				userId, flightnumber, seatId, no_of_seats,BookingDate);
+				userId, flightnumber, seatnumber, no_of_seats,BookingDate);
 		Passenger user = userRepository.findById(userId)
 				.orElseThrow(() -> new RuntimeException("User not found")); 
 		Flight flight = flightRepository.findByFlightnumber(flightnumber)
 				.orElseThrow(() -> new RuntimeException("Flight not found")); 
-		Seat seat = seatRepository.findById(seatId)
+		Seat seat = seatRepository.findBySeatnumber(seatnumber)
 				.orElseThrow(() -> new RuntimeException("Seat not found")); 
 		Booking booking = new Booking(); 
 		booking.setUser(user);
@@ -63,12 +63,12 @@ public class BookingServiceImpl implements BookingService{
 			booking.setStatus("CONFIRMED"); 
 			bookingRepository.save(booking);
 			logger.info("Booking successfully made for userId: {}, flightnumber: {}, seatId: {}", 
-					userId, flightnumber,seatId);
+					userId, flightnumber,seatnumber);
 			return ResponseEntity.status(HttpStatus.OK).body("Booking is successfully made!");
 		}
 		else
 		{
-			logger.warn("Seat already booked for seatId: {}", seatId);
+			logger.warn("Seat already booked for seatId: {}", seatnumber);
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Seat Already Booked");
 		}
 	}

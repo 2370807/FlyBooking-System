@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.cts.flybooking.model.Flight;
+import com.cts.flybooking.model.Passenger;
 import com.cts.flybooking.model.Seat;
 public interface SeatRepository extends JpaRepository<Seat, Long> {
 
@@ -17,4 +18,6 @@ public interface SeatRepository extends JpaRepository<Seat, Long> {
 	void deleteBySeatnumber(long seatnumber);
 
 	List<Seat> findByFlight_Flightnumber(String flightnumber);
+
+	Optional<Seat> findBySeatnumber(String seatnumber);
 }
