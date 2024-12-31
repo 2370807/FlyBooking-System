@@ -26,7 +26,6 @@ public class BookingController {
 	private BookingService bookingService; 
 	
 	@PostMapping("/intiatebooking")//--give booking dto
-	//@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<String> createBooking(@RequestBody InitiateBookingDTO initiateBookingdto) 
 	{ 
 		return bookingService.createBooking(initiateBookingdto); 
@@ -41,7 +40,7 @@ public class BookingController {
 		return ResponseEntity.ok(bookings);
 	} 
 	
-	@DeleteMapping("/cancel/{bookingId}") //--check it//check the cancelling logic well we could able to apply the same seat 2 times.
+	@DeleteMapping("/cancel/{bookingId}") //--check it//check the canceling logic well we could able to apply the same seat 2 times.
 	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<String> cancelBooking(@PathVariable long bookingId) 
 	{ 
@@ -56,6 +55,5 @@ public class BookingController {
 		bookingService.updateBooking(bookingId, bookingDTO); 
 		return ResponseEntity.status(HttpStatus.OK).body("Booking updated");
 	}
-	
-	
+
 }
