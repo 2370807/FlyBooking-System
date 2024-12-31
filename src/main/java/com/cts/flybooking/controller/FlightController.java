@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,6 +47,7 @@ public class FlightController {
 	
 	@DeleteMapping("/deleteflight/{flightid}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	//@Transactional
 	public ResponseEntity<String> removeFlightdetails(@PathVariable String flightid)
 	{
 		return flightService.deleteflight(flightid);

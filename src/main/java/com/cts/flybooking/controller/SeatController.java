@@ -40,11 +40,11 @@ public class SeatController {
 		return seatService.getAvailableSeats(flightnumber);
 	}
 	
-	@DeleteMapping("/deleteseat/{seatnumber}")
+	@DeleteMapping("/deleteseat/{seatnumber}/{seatclass}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public void deleteSeat(@PathVariable long seatnumber)
+	public void deleteSeat(@PathVariable long seatnumber,@PathVariable String seatclass)
 	{ 
-		seatService.removeSeat(seatnumber);
+		seatService.removeSeat(seatnumber,seatclass);
 	}
 	
 	@GetMapping("/allseatsofthisflight/{flightnumber}")

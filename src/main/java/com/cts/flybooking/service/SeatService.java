@@ -12,7 +12,7 @@ public interface SeatService {
 	
 	public ResponseEntity<String> createSeat(SeatDTO seatDTO);
 	public List<Seat> getAvailableSeats(String flightnumber);
-	public ResponseEntity<String> removeSeat(long seatnumber);
+	public ResponseEntity<String> removeSeat(long seatnumber,String seatclass);
 	//public List<Seat> findAll();
 	public List<Seat> findAll(String flightnumber);
 }

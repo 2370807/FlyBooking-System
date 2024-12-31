@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cts.flybooking.dto.BookingDTO;
+import com.cts.flybooking.dto.InitiateBookingDTO;
 import com.cts.flybooking.service.BookingService;
 
 @RestController
@@ -24,11 +25,11 @@ public class BookingController {
 	@Autowired
 	private BookingService bookingService; 
 	
-	@PostMapping("/intiatebooking/{userId}/{flightnumber}/{seatId}/{no_of_seat}/{BookingDate}")//--give booking dto
+	@PostMapping("/intiatebooking")//--give booking dto
 	//@PreAuthorize("hasRole('ROLE_USER')")
-	public ResponseEntity<String> createBooking(@PathVariable long userId, @PathVariable String flightnumber, @PathVariable long seatnumber,@PathVariable int no_of_seat,@PathVariable LocalDate BookingDate) 
+	public ResponseEntity<String> createBooking(@RequestBody InitiateBookingDTO initiateBookingdto) 
 	{ 
-		return bookingService.createBooking(userId, flightnumber, seatnumber,no_of_seat,BookingDate); 
+		return bookingService.createBooking(initiateBookingdto); 
 		//return ResponseEntity.status(HttpStatus.OK).body(bookingService.createBooking(userId, flightnumber, seatId));
 	} 
 	

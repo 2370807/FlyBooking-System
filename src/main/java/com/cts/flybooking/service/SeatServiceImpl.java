@@ -39,17 +39,24 @@ public class SeatServiceImpl implements SeatService  {
 				 .orElseThrow(() -> new RuntimeException("Flight not found"));
 		 Price price=priceRepository.findByClassname(seatDTO.getSeatclass())
 				 .orElseThrow(()->new RuntimeException("Invalid SeatClass"));
-		 Seat seat=new Seat();
-		 seat.setFlight(flight1); 
-		 //seat.setSeatClass(seatClass1);
-		 seat.setSeatnumber((Long.valueOf(seatDTO.getSeatnumber()))); 
-		 seat.setIsavailable(seatDTO.isIsavailable());
-		 seat.setPrices(price);
-		 flight1.getSeats().add(seat);
-		 flight1.setSeats(flight1.getSeats());
-		 seatRepository.save(seat);
-		 logger.info("Seat added successfully for flight number: {}", seatDTO.getFightnumber());
-		 return ResponseEntity.status(HttpStatus.OK).body("Seat added successfully");
+		 Seat seat=seatRepository.findByFlight_FlightnumberAndSeatnumberAndPrices_Classname(seatDTO.getFightnumber(),(Long.valueOf(seatDTO.getSeatnumber())),seatDTO.getSeatclass());
+		 if(seat==null) 
+		 { 
+			 Seat seat1=new Seat();
+			 seat1.setFlight(flight1); 
+			 seat1.setSeatnumber((Long.valueOf(seatDTO.getSeatnumber()))); 
+			 seat1.setIsavailable(seatDTO.isIsavailable());
+			 seat1.setPrices(price);
+			 flight1.getSeats().add(seat1);
+			 flight1.setSeats(flight1.getSeats());
+			 seatRepository.save(seat1);
+			 logger.info("Seat added successfully for flight number: {}", seatDTO.getFightnumber());
+			 return ResponseEntity.status(HttpStatus.OK).body("Seat added successfully");
+		}
+		else
+		{
+			 return ResponseEntity.status(HttpStatus.OK).body("This seatnumber "+(Long.valueOf(seatDTO.getSeatnumber()))+" already exist in "+seatDTO.getFightnumber()+" flight");
+		}
 	}
 
 	@Override
@@ -61,10 +68,10 @@ public class SeatServiceImpl implements SeatService  {
 
 	@Override
 	@Transactional
-	public ResponseEntity<String> removeSeat(long seatnumber) {
+	public ResponseEntity<String> removeSeat(long seatnumber,String Seatclass) {
 		// TODO Auto-generated method stub
 		logger.info("Removing seat with seat number: {}", seatnumber);
-		seatRepository.deleteBySeatnumber(seatnumber);
+		seatRepository.deleteBySeatnumberAndPrices_Classname(seatnumber,Seatclass);
 		logger.info("Seat removed successfully with seat number: {}", seatnumber);
 		return ResponseEntity.status(HttpStatus.OK).body("Seat removed");
 	}

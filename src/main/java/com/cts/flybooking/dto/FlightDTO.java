@@ -30,10 +30,12 @@ public class FlightDTO {
 	
 	//@NotBlank(message="Departure time cannot be empty")
 //	@Future(message = "The end time must be in the future")
+	@NotNull
 	private LocalDateTime departure_time;
 	
 	//@NotBlank(message="Arrival time cannot be empty")
 //	@Future(message = "The start time must be in the future")
+	@NotNull
 	private LocalDateTime arrival_time;
 
 		// TODO Auto-generated method stub

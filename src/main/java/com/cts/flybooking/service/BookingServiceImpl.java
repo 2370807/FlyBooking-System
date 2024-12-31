@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.cts.flybooking.dto.BookingDTO;
+import com.cts.flybooking.dto.InitiateBookingDTO;
 import com.cts.flybooking.model.Booking;
 import com.cts.flybooking.model.Flight;
 import com.cts.flybooking.model.Passenger;
@@ -41,15 +42,15 @@ public class BookingServiceImpl implements BookingService{
 	private SeatRepository seatRepository;
 	
 	@Override
-	public ResponseEntity<String> createBooking(long userId, String flightnumber, long seatnumber ,int no_of_seats,LocalDate BookingDate)
+	public ResponseEntity<String> createBooking(InitiateBookingDTO initiateBookingDTO)
 	{ 
 		logger.info("Creating booking for userId: {}, flightnumber: {}, seatId: {}, no_of_seats: {}, BookingDate: {}", 
-				userId, flightnumber, seatnumber, no_of_seats,BookingDate);
-		Passenger user = userRepository.findById(userId)
+				initiateBookingDTO.getUserId(), initiateBookingDTO.getFlightnumber(), initiateBookingDTO.getSeatnumber(), initiateBookingDTO.getNo_of_seats(),initiateBookingDTO.getBookingDate());
+		Passenger user = userRepository.findById(initiateBookingDTO.getUserId())
 				.orElseThrow(() -> new RuntimeException("User not found")); 
-		Flight flight = flightRepository.findByFlightnumber(flightnumber)
+		Flight flight = flightRepository.findByFlightnumber(initiateBookingDTO.getFlightnumber())
 				.orElseThrow(() -> new RuntimeException("Flight not found")); 
-		Seat seat = seatRepository.findBySeatnumber(seatnumber)
+		Seat seat = seatRepository.findBySeatnumber(initiateBookingDTO.getSeatnumber())
 				.orElseThrow(() -> new RuntimeException("Seat not found")); 
 		Booking booking = new Booking(); 
 		booking.setUser(user);
@@ -58,17 +59,17 @@ public class BookingServiceImpl implements BookingService{
 		{
 			booking.setSeat(seat);
 			seat.setIsavailable(false);
-			booking.setBookingDate(BookingDate);
-			booking.setNo_of_seats(no_of_seats);
+			booking.setBookingDate(initiateBookingDTO.getBookingDate());
+			booking.setNo_of_seats(initiateBookingDTO.getNo_of_seats());
 			booking.setStatus("CONFIRMED"); 
 			bookingRepository.save(booking);
 			logger.info("Booking successfully made for userId: {}, flightnumber: {}, seatId: {}", 
-					userId, flightnumber,seatnumber);
+					initiateBookingDTO.getUserId(), initiateBookingDTO.getFlightnumber(), initiateBookingDTO.getSeatnumber());
 			return ResponseEntity.status(HttpStatus.OK).body("Booking is successfully made!");
 		}
 		else
 		{
-			logger.warn("Seat already booked for seatId: {}", seatnumber);
+			logger.warn("Seat already booked for seatId: {}", initiateBookingDTO.getSeatnumber());
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Seat Already Booked");
 		}
 	}

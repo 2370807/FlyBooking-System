@@ -20,6 +20,6 @@ public interface PassengerService {
 
 	public void delete(long userId);
 
-	public ResponseEntity<String> createUser(String username,String Username, String password,PassengerDTO userdto);
+	public ResponseEntity<String> createUser(PassengerDTO userdto);
 	
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cts.flybooking.dto.FlightDTO;
 import com.cts.flybooking.model.Flight;
@@ -39,10 +40,11 @@ public class FlightServiceImpl implements FlightService {
 	}
 
 	@Override
-	public ResponseEntity<String> updateflight(String flightid, FlightDTO flightdto) {
+	public ResponseEntity<String> updateflight(String flightnumber, FlightDTO flightdto) {
 		// TODO Auto-generated method stub
-		logger.info("Updating flight with flight id: {}", flightid);
-		Flight flight=Flight.builder()
+		logger.info("Updating flight with flight id: {}", flightnumber);
+		Flight flight = flightRepository.findByFlightnumber(flightnumber).orElseThrow(()->new RuntimeException("Flight with "+flightnumber+" not found"));
+		flight=Flight.builder()
 				.airline(flightdto.getAirline())
 				.arrival_time(flightdto.getArrival_time())
 				.departure_time(flightdto.getDeparture_time())
@@ -51,15 +53,17 @@ public class FlightServiceImpl implements FlightService {
 				.flightnumber(flightdto.getFlightnumber())//--changed
 				.build();
 		flightRepository.save(flight);
-		logger.info("Updated flight with flight id: {} successfully", flightid);
+		logger.info("Updated flight with flight id: {} successfully", flightnumber);
 		return ResponseEntity.status(HttpStatus.OK).body("Updated value is saved successfully!");
 	}
 
 	@Override
+	@Transactional
 	public ResponseEntity<String> deleteflight(String flightnumber) {
 		// TODO Auto-generated method stub
 		logger.info("Deleting flight with flight number: {}", flightnumber);
-		flightRepository.deleteById(flightnumber);
+		Flight flight=flightRepository.findByFlightnumber(flightnumber).orElseThrow(()->new RuntimeException("The "+flightnumber+" is not present"));
+		flightRepository.delete(flight);
 		logger.info("Deleted flight with flight number: {}",flightnumber);
 		return ResponseEntity.status(HttpStatus.OK).body("This "+flightnumber + " details has been removed");
 	}

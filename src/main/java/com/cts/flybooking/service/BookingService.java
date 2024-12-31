@@ -6,10 +6,11 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 
 import com.cts.flybooking.dto.BookingDTO;
+import com.cts.flybooking.dto.InitiateBookingDTO;
 import com.cts.flybooking.model.Booking;
 
 public interface BookingService {
-	    public ResponseEntity<String> createBooking(long userId, String flightnumber, long seatnumber,int no_of_seats,LocalDate BookingDate);  
+	    public ResponseEntity<String> createBooking(InitiateBookingDTO initiateBookingDTO);  
 	    public List<BookingDTO> getBookingsByUser(long userId); 
 	    public BookingDTO convertToBookingDTO(Booking booking);
 	    public void cancelBooking(long bookingId);

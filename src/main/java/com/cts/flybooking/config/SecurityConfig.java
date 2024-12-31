@@ -35,7 +35,7 @@ public class SecurityConfig {
 	{
 		http.csrf((csrf)-> csrf.disable())
 		.authorizeHttpRequests((authorize)->authorize
-			.requestMatchers("/Passenger/register/**","/Passenger/login/**","/Booking/intiatebooking/**").permitAll()
+			.requestMatchers("/Passenger/register","/Passenger/login/**","/Booking/intiatebooking/**").permitAll()
 			.anyRequest().authenticated()
 		)
 		.formLogin(Customizer.withDefaults())

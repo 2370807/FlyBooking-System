@@ -47,7 +47,7 @@ public class PassengerServiceImpl implements PassengerService {
 			 	.name(userdto.getName())
 			 	.useremail(userdto.getUseremail())
 			 	.phonenumber(userdto.getPhonenumber())
-			 	.password(userdto.getPassword())
+			 	.password(passwordEncode.encode(userdto.getPassword()))
 			 	.username(userdto.getUsername())
 			 	.roles(userdto.getRoles())
 			 	.build();
@@ -65,26 +65,26 @@ public class PassengerServiceImpl implements PassengerService {
 	}
 
 	@Override
-	public ResponseEntity<String> createUser(String username,String useremail,String password,PassengerDTO userdto) {
-		logger.info("Creating user with username: {}, useremail: {}", username, useremail);
-		if(userRepository.findByUseremail(useremail)!=null)
+	public ResponseEntity<String> createUser(PassengerDTO userdto) {
+		logger.info("Creating user with username: {}, useremail: {}", userdto.getUsername(), userdto.getUseremail());
+		if(userRepository.findByUseremail(userdto.getUseremail())!=null)
 		{
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already exist");
 		}
-		if(userRepository.findByUsername(username)!=null)
+		if(userRepository.findByUsername(userdto.getUsername())!=null)
 		{
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already taken");
 		}
 		Passenger user= Passenger.builder()
-				.username(username)
-				.useremail(useremail)
-				.password(passwordEncode.encode(password))
+				.username(userdto.getUsername())
+				.useremail(userdto.getUseremail())
+				.password(passwordEncode.encode(userdto.getPassword()))
 				.phonenumber(userdto.getPhonenumber())
 				.name(userdto.getName())
 				.roles(userdto.getRoles())
 				.build();
 		userRepository.save(user);
-		logger.info("User with username: {} created successfully", username);
+		logger.info("User with username: {} created successfully", userdto.getUsername());
 		return ResponseEntity.status(HttpStatus.OK).body("Registeration successful");
 	}
 	

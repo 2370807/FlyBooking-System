@@ -52,10 +52,10 @@ public class PassengerController {
 	 }
 	 
 	 
-	 @PostMapping("/register/{username}/{useremail}/{password}")
-	 public ResponseEntity<String> registerNewUser(@PathVariable("username") String username,@PathVariable("useremail") String useremail,@PathVariable("password") String password,@RequestBody  @Valid PassengerDTO userdto)
+	 @PostMapping("/register")
+	 public ResponseEntity<String> registerNewUser(@RequestBody  @Valid PassengerDTO userdto)
 	 { 
-		return  userService.createUser(username,useremail,password,userdto);
+		return  userService.createUser(userdto);
 	 }
 	 
 	 
