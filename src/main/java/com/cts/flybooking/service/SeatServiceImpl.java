@@ -16,6 +16,8 @@ import com.cts.flybooking.model.Seat;
 import com.cts.flybooking.repository.FlightRepository;
 import com.cts.flybooking.repository.PriceRepository;
 import com.cts.flybooking.repository.SeatRepository;
+
+
 @Service
 public class SeatServiceImpl implements SeatService  {
 
