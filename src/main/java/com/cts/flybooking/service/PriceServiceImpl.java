@@ -61,17 +61,8 @@ public class PriceServiceImpl implements PriceService {
 	public void removeClass(String classname) {
 		// TODO Auto-generated method stub
 		logger.info("Removing price class with class name: {}", classname);
-//		TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionOperations.Propagation.REQUIRED);
 		priceRepository.deleteByClassname(classname);
-		logger.info("Price class removed successfully for class name: {}", classname);
-//		try 
-//		{ 
-//			priceRepository.deleteByClassname(classname); 
-//		} catch (Exception e) 
-//		{ 
-//			transactionManager.rollback(status);
-//		}
-		
+		logger.info("Price class removed successfully for class name: {}", classname);	
 	}
 
 	@Override
@@ -81,9 +72,4 @@ public class PriceServiceImpl implements PriceService {
 		return priceRepository.findAll();
 	}
 	
-//	public void getByAvailableseatbyclassname()
-//	{
-//		seatRepository.get
-//	}
-
 }

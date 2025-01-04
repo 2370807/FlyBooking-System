@@ -1,6 +1,11 @@
 package com.cts.flybooking.model;
 
 import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,14 +30,17 @@ public class Booking {
 	
 	@ManyToOne 
 	@JoinColumn(name = "user_id", nullable = false) 
+	@JsonBackReference
 	private Passenger user; 
 	
-	@ManyToOne 
+	@ManyToOne
 	@JoinColumn(name = "flight_id", nullable = false) 
+	@JsonBackReference
 	private Flight flight; 
 	
 	@ManyToOne 
 	@JoinColumn(name = "seat_id", nullable = false) 
+	@JsonBackReference
 	private Seat seat; 
 	
 	private int no_of_seats;

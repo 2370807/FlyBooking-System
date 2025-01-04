@@ -32,25 +32,23 @@ public class PassengerServiceImpl implements PassengerService {
 	}
 
 	@Override
-	public Optional<Passenger> findbyId(long userId) {
+	public Passenger findbyId(long userId) {
 		logger.info("Finding passenger by id: {}", userId);
-		return userRepository.findById(userId);
+		return userRepository.findById(userId).orElseThrow(()-> new RuntimeException("No Passenger with Id: "+userId+" is found"));
 	}
 
 	@Override
 	public Passenger update(long userId,PassengerDTO userdto) //--changed
 	{
 		logger.info("Updating passenger with id: {}", userId);
-		Passenger user=userRepository.findById(userId).orElseThrow(()->new RuntimeException("Passenger not found"));
-		
-		user = Passenger.builder()
-			 	.name(userdto.getName())
-			 	.useremail(userdto.getUseremail())
-			 	.phonenumber(userdto.getPhonenumber())
-			 	.password(passwordEncode.encode(userdto.getPassword()))
-			 	.username(userdto.getUsername())
-			 	.roles(userdto.getRoles())
-			 	.build();
+		Passenger user=userRepository.findById(userId)
+				.orElseThrow(()->new RuntimeException("Passenger not found"));
+		user.setName(userdto.getName());
+		user.setPassword(passwordEncode.encode(userdto.getPassword()));
+		user.setPhonenumber(userdto.getPhonenumber());
+		user.setUseremail(userdto.getUseremail());
+		user.setUsername(userdto.getUsername());
+		user.setRoles(userdto.getRoles());
 		logger.info("Passenger with id: {} updated successfully", userId);
 		return userRepository.save(user);
 	}

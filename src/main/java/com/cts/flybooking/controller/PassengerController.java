@@ -38,7 +38,7 @@ public class PassengerController {
 	 
 	 @GetMapping("/GetById/{id}")
 	 @PreAuthorize("hasRole('ROLE_ADMIN')")
-	 public Optional<Passenger> getUserbyId(@PathVariable("id") Long userId)
+	 public Passenger getUserbyId(@PathVariable("id") Long userId)
 	 {
 		 return userService.findbyId(userId);
 	 }

@@ -1,5 +1,9 @@
 package com.cts.flybooking.model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,4 +22,8 @@ public class Price {
 	private double price;
 	
 	private String classname;
+	
+	@OneToMany(mappedBy="price",cascade=CascadeType.ALL)
+	@JsonManagedReference
+	private List<Seat> seats;
 }

@@ -31,6 +31,6 @@ public class PassengerDTO {
 	message = "Password must be at least 8 characters long, contain at least one digit, one lowercase letter, one uppercase letter, and one special character.")
 	public String password;
 	
-	@NotBlank(message="The role Allocation is mandatory")
+//	@NotBlank(message="The role Allocation is mandatory")
 	public String roles;
 }

@@ -28,7 +28,11 @@ public class Flight {
 	private LocalDateTime departure_time;
 	private LocalDateTime arrival_time;
 	
-	@OneToMany(mappedBy="flight")
+	@OneToMany(mappedBy="flight",cascade=CascadeType.ALL)
+	@JsonManagedReference
+	private List<Booking> bookings;
+	
+	@OneToMany(mappedBy="flight", cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private List<Seat> seats;
 	

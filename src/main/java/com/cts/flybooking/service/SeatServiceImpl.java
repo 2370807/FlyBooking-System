@@ -39,14 +39,14 @@ public class SeatServiceImpl implements SeatService  {
 				 .orElseThrow(() -> new RuntimeException("Flight not found"));
 		 Price price=priceRepository.findByClassname(seatDTO.getSeatclass())
 				 .orElseThrow(()->new RuntimeException("Invalid SeatClass"));
-		 Seat seat=seatRepository.findByFlight_FlightnumberAndSeatnumberAndPrices_Classname(seatDTO.getFightnumber(),(Long.valueOf(seatDTO.getSeatnumber())),seatDTO.getSeatclass());
+		 Seat seat=seatRepository.findByFlight_FlightnumberAndSeatnumberAndPrice_Classname(seatDTO.getFightnumber(),(Long.valueOf(seatDTO.getSeatnumber())),seatDTO.getSeatclass());
 		 if(seat==null) 
 		 { 
 			 Seat seat1=new Seat();
 			 seat1.setFlight(flight1); 
 			 seat1.setSeatnumber((Long.valueOf(seatDTO.getSeatnumber()))); 
 			 seat1.setIsavailable(seatDTO.isIsavailable());
-			 seat1.setPrices(price);
+			 seat1.setPrice(price);
 			 flight1.getSeats().add(seat1);
 			 flight1.setSeats(flight1.getSeats());
 			 seatRepository.save(seat1);
@@ -71,7 +71,7 @@ public class SeatServiceImpl implements SeatService  {
 	public ResponseEntity<String> removeSeat(long seatnumber,String Seatclass) {
 		// TODO Auto-generated method stub
 		logger.info("Removing seat with seat number: {}", seatnumber);
-		seatRepository.deleteBySeatnumberAndPrices_Classname(seatnumber,Seatclass);
+		seatRepository.deleteBySeatnumberAndPrice_Classname(seatnumber,Seatclass);
 		logger.info("Seat removed successfully with seat number: {}", seatnumber);
 		return ResponseEntity.status(HttpStatus.OK).body("Seat removed");
 	}

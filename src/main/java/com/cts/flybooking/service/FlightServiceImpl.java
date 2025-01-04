@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cts.flybooking.dto.FlightDTO;
+import com.cts.flybooking.model.Booking;
 import com.cts.flybooking.model.Flight;
+import com.cts.flybooking.repository.BookingRepository;
 import com.cts.flybooking.repository.FlightRepository;
 @Service
 public class FlightServiceImpl implements FlightService {
@@ -21,6 +23,12 @@ public class FlightServiceImpl implements FlightService {
 	
 	@Autowired
 	private FlightRepository flightRepository;
+	
+	@Autowired
+	private BookingRepository bookingRepository;
+	
+//	@Autowired
+//	private BookingService bookingService;
 	
 	@Override
 	public ResponseEntity<String> createflight(FlightDTO flightdto) {
@@ -43,7 +51,8 @@ public class FlightServiceImpl implements FlightService {
 	public ResponseEntity<String> updateflight(String flightnumber, FlightDTO flightdto) {
 		// TODO Auto-generated method stub
 		logger.info("Updating flight with flight id: {}", flightnumber);
-		Flight flight = flightRepository.findByFlightnumber(flightnumber).orElseThrow(()->new RuntimeException("Flight with "+flightnumber+" not found"));
+		Flight flight = flightRepository.findByFlightnumber(flightnumber)
+				.orElseThrow(()->new RuntimeException("Flight with "+flightnumber+" not found"));
 		flight=Flight.builder()
 				.airline(flightdto.getAirline())
 				.arrival_time(flightdto.getArrival_time())
@@ -62,7 +71,20 @@ public class FlightServiceImpl implements FlightService {
 	public ResponseEntity<String> deleteflight(String flightnumber) {
 		// TODO Auto-generated method stub
 		logger.info("Deleting flight with flight number: {}", flightnumber);
-		Flight flight=flightRepository.findByFlightnumber(flightnumber).orElseThrow(()->new RuntimeException("The "+flightnumber+" is not present"));
+		Flight flight=flightRepository.findByFlightnumber(flightnumber)
+				.orElseThrow(()->new RuntimeException("The "+flightnumber+" is not present"));	
+//		bookingService.cancelBookingByCompany(flightnumber);
+//		bookingRepository.deleteByFlight(flightnumber);
+		List<Booking> bookings = bookingRepository.findByFlight_Flightnumber(flightnumber);
+		if (!bookings.isEmpty()) 
+		{ 
+			for (Booking booking : bookings) 
+			{ 
+				booking.setStatus("Cancelled by Company"); 
+				bookingRepository.save(booking);  
+				 
+			}
+		}
 		flightRepository.delete(flight);
 		logger.info("Deleted flight with flight number: {}",flightnumber);
 		return ResponseEntity.status(HttpStatus.OK).body("This "+flightnumber + " details has been removed");

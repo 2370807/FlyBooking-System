@@ -21,7 +21,7 @@ public interface SeatRepository extends JpaRepository<Seat, Long> {
 
 	Optional<Seat> findBySeatnumber(long seatnumber);
 
-	Seat findByFlight_FlightnumberAndSeatnumberAndPrices_Classname(String fightnumber, Long long1, String seatclass);
+	Seat findByFlight_FlightnumberAndSeatnumberAndPrice_Classname(String fightnumber, Long long1, String seatclass);
 
-	void deleteBySeatnumberAndPrices_Classname(long seatnumber, String seatclass);
+	void deleteBySeatnumberAndPrice_Classname(long seatnumber, String seatclass);
 }

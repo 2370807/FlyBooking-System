@@ -23,9 +23,9 @@ public class InitiateBookingDTO {
 	@NotNull(message="Seatnumber cannot be null")
 	private long seatnumber;
 	
-	@Min(value=1,message="Minimum number of seats cannot be 0")
-	private int no_of_seats;
-	
 	@Future(message="Booking Date cannot be in present or in past")
 	private LocalDate BookingDate;
+	
+	@NotNull(message="Seatclass must have value")
+	private String Seatclass;
 }

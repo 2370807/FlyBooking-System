@@ -45,13 +45,12 @@ public class BookingServiceImpl implements BookingService{
 	public ResponseEntity<String> createBooking(InitiateBookingDTO initiateBookingDTO)
 	{ 
 		logger.info("Creating booking for userId: {}, flightnumber: {}, seatId: {}, no_of_seats: {}, BookingDate: {}", 
-				initiateBookingDTO.getUserId(), initiateBookingDTO.getFlightnumber(), initiateBookingDTO.getSeatnumber(), initiateBookingDTO.getNo_of_seats(),initiateBookingDTO.getBookingDate());
+				initiateBookingDTO.getUserId(), initiateBookingDTO.getFlightnumber(), initiateBookingDTO.getSeatnumber(),1,initiateBookingDTO.getBookingDate());
 		Passenger user = userRepository.findById(initiateBookingDTO.getUserId())
 				.orElseThrow(() -> new RuntimeException("User not found")); 
 		Flight flight = flightRepository.findByFlightnumber(initiateBookingDTO.getFlightnumber())
 				.orElseThrow(() -> new RuntimeException("Flight not found")); 
-		Seat seat = seatRepository.findBySeatnumber(initiateBookingDTO.getSeatnumber())
-				.orElseThrow(() -> new RuntimeException("Seat not found")); 
+		Seat seat = seatRepository.findByFlight_FlightnumberAndSeatnumberAndPrice_Classname(initiateBookingDTO.getFlightnumber(),initiateBookingDTO.getSeatnumber(),initiateBookingDTO.getSeatclass()); 
 		Booking booking = new Booking(); 
 		booking.setUser(user);
 		booking.setFlight(flight); 
@@ -60,7 +59,9 @@ public class BookingServiceImpl implements BookingService{
 			booking.setSeat(seat);
 			seat.setIsavailable(false);
 			booking.setBookingDate(initiateBookingDTO.getBookingDate());
-			booking.setNo_of_seats(initiateBookingDTO.getNo_of_seats());
+			System.out.println(booking.getBookingDate());
+			System.out.println(initiateBookingDTO.getBookingDate());
+			booking.setNo_of_seats(1);
 			booking.setStatus("CONFIRMED"); 
 			bookingRepository.save(booking);
 			logger.info("Booking successfully made for userId: {}, flightnumber: {}, seatId: {}", 
@@ -94,8 +95,8 @@ public class BookingServiceImpl implements BookingService{
 		bookingDTO.setSeatNumber(booking.getSeat().getSeatnumber()); 
 		bookingDTO.setBookingDate(booking.getBookingDate()); 
 		bookingDTO.setStatus(booking.getStatus()); 
-		bookingDTO.setPrice(totalprice(booking.getNo_of_seats(), booking.getSeat().getPrices().getPrice()));
-		bookingDTO.setSeatClass(booking.getSeat().getPrices().getClassname());
+		bookingDTO.setPrice(totalprice(booking.getNo_of_seats(), booking.getSeat().getPrice().getPrice()));
+		bookingDTO.setSeatClass(booking.getSeat().getPrice().getClassname());
 		bookingDTO.setNo_of_seats(booking.getNo_of_seats());
 		logger.debug("Converted Booking to BookingDTO: {}", bookingDTO);
 		return bookingDTO; 
@@ -144,6 +145,21 @@ public class BookingServiceImpl implements BookingService{
 	{
 		logger.debug("Calculated total price: {}", (no_of_seat*price));
 		return (long) (no_of_seat*price);
+	}
+	
+	@Override
+	public void cancelBookingByCompany(String flightnumber)
+	{ 
+		List<Booking> bookings = bookingRepository.findByFlight_Flightnumber(flightnumber); 
+		if (bookings.isEmpty()) 
+		{ 
+			throw new RuntimeException("No bookings found for this flight"); 
+		} 
+		for (Booking booking : bookings) 
+		{ 
+			booking.setStatus("Cancelled by Company");
+			bookingRepository.save(booking);
+		}
 	}
 	
 }

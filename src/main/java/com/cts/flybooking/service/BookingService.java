@@ -15,5 +15,6 @@ public interface BookingService {
 	    public BookingDTO convertToBookingDTO(Booking booking);
 	    public void cancelBooking(long bookingId);
 	    public Booking updateBooking(long bookingId, BookingDTO bookingDTO);
+	    public void cancelBookingByCompany(String flightnumber);
 	    //public long totalprice(int no_of_seat,long price);
 }

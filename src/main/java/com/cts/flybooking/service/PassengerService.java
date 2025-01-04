@@ -12,7 +12,7 @@ public interface PassengerService {
 
 	public List<Passenger> findAll();
 
-	public Optional<Passenger> findbyId(long userId);
+	public Passenger findbyId(long userId);
 
 	public Passenger update(long userId,PassengerDTO user);
 

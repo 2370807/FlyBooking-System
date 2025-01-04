@@ -18,6 +18,8 @@ import com.cts.flybooking.dto.BookingDTO;
 import com.cts.flybooking.dto.InitiateBookingDTO;
 import com.cts.flybooking.service.BookingService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/Booking")
 public class BookingController {
@@ -26,7 +28,7 @@ public class BookingController {
 	private BookingService bookingService; 
 	
 	@PostMapping("/intiatebooking")//--give booking dto
-	public ResponseEntity<String> createBooking(@RequestBody InitiateBookingDTO initiateBookingdto) 
+	public ResponseEntity<String> createBooking(@RequestBody @Valid InitiateBookingDTO initiateBookingdto) 
 	{ 
 		return bookingService.createBooking(initiateBookingdto); 
 		//return ResponseEntity.status(HttpStatus.OK).body(bookingService.createBooking(userId, flightnumber, seatId));
@@ -55,5 +57,12 @@ public class BookingController {
 		bookingService.updateBooking(bookingId, bookingDTO); 
 		return ResponseEntity.status(HttpStatus.OK).body("Booking updated");
 	}
-
+	
+	@DeleteMapping("/cancelByCompany/{flightnumber}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public ResponseEntity<String> cancelBookingByCompany(@PathVariable String flightnumber)
+	{
+		bookingService.cancelBookingByCompany(flightnumber);
+		return ResponseEntity.status(HttpStatus.OK).body("Booking has been canceled by Company");
+	}
 }

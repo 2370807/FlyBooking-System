@@ -1,14 +1,21 @@
 package com.cts.flybooking.model;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
+
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,10 +45,14 @@ public class Seat {
 	@JsonBackReference //-changed
 	private Flight flight;
 	
-	@ManyToOne
+	@ManyToOne//(cascade = CascadeType.ALL)
 	@JoinColumn(name="priceid")
-	private Price prices;
+	@JsonBackReference
+	private Price price;
 	
+	@OneToMany(mappedBy="seat", cascade = CascadeType.ALL)
+	@JsonManagedReference
+	private List<Booking> bookings;
 //	@PrePersist
 //	void prePersist()
 //	{
