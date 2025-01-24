@@ -17,7 +17,6 @@ public class SeatDTO {
 //	@NotBlank(message="Enter valid class id")
 //	private String id;
 	//@NotBlank(message="Either enter true or false")
-	@AssertTrue(message="The available seat must be true")
 	private boolean isavailable;
 	
 	@NotBlank(message="Enter the valid seatnumber")

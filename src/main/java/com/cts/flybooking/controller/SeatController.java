@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cts.flybooking.dto.DispSeatDTO;
 import com.cts.flybooking.dto.SeatDTO;
 import com.cts.flybooking.model.Seat;
 import com.cts.flybooking.service.SeatService;
@@ -35,7 +37,7 @@ public class SeatController {
 	
 	@GetMapping("/availableseat/{flightnumber}")
 	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-	public List<Seat> availableSeat(@PathVariable String flightnumber)
+	public List<DispSeatDTO> availableSeat(@PathVariable String flightnumber)
 	{
 		return seatService.getAvailableSeats(flightnumber);
 	}
@@ -49,8 +51,15 @@ public class SeatController {
 	
 	@GetMapping("/allseatsofthisflight/{flightnumber}")
 	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-	public List<Seat> getAllSeats(@PathVariable String flightnumber)
+	public List<DispSeatDTO> getAllSeats(@PathVariable String flightnumber)
 	{
 		return seatService.findAll(flightnumber);
 	}
+	
+	@PutMapping("/updateseat/{flightnumber}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public Seat updateseat(@PathVariable String flightnumber,@RequestBody @Valid SeatDTO seatDTO) {
+		return seatService.updateseat(flightnumber,seatDTO);
+	}
+
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cts.flybooking.dto.BookingDTO;
 import com.cts.flybooking.dto.InitiateBookingDTO;
+import com.cts.flybooking.model.Booking;
 import com.cts.flybooking.service.BookingService;
 
 import jakarta.validation.Valid;
@@ -34,8 +35,7 @@ public class BookingController {
 		//return ResponseEntity.status(HttpStatus.OK).body(bookingService.createBooking(userId, flightnumber, seatId));
 	} 
 	
-	@GetMapping("/BookingByUser/{userId}") //--check it
-	@PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+	@GetMapping("/BookingByUser/{userId}") 
 	public ResponseEntity<List<BookingDTO>> getBookingsByUser(@PathVariable long userId) 
 	{ 
 		List<BookingDTO> bookings = bookingService.getBookingsByUser(userId); 
@@ -43,7 +43,7 @@ public class BookingController {
 	} 
 	
 	@DeleteMapping("/cancel/{bookingId}") //--check it//check the canceling logic well we could able to apply the same seat 2 times.
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
 	public ResponseEntity<String> cancelBooking(@PathVariable long bookingId) 
 	{ 
 		bookingService.cancelBooking(bookingId); 
@@ -58,11 +58,17 @@ public class BookingController {
 		return ResponseEntity.status(HttpStatus.OK).body("Booking updated");
 	}
 	
-	@DeleteMapping("/cancelByCompany/{flightnumber}")
+	@DeleteMapping("/cancelByCompany/{BookingId}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public ResponseEntity<String> cancelBookingByCompany(@PathVariable String flightnumber)
+	public ResponseEntity<String> cancelBookingByCompany(@PathVariable long BookingId)
 	{
-		bookingService.cancelBookingByCompany(flightnumber);
+		bookingService.cancelBookingByCompany(BookingId);
 		return ResponseEntity.status(HttpStatus.OK).body("Booking has been canceled by Company");
+	}
+	
+	@GetMapping("/BookingByFlight/{flightNumber}")
+	public List<BookingDTO> getBookingsByFlight(@PathVariable String flightNumber) {
+		//System.out.println("Fetching bookings for flight: " + flightNumber);
+	    return bookingService.getBookingsByFlight(flightNumber);
 	}
 }

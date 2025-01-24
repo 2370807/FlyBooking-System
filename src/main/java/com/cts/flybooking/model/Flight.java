@@ -1,5 +1,6 @@
 package com.cts.flybooking.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Flight {
 	private String flightnumber;
 	private String airline;
 	private String source;
-	private String desination;
+	private String destination;
 	private LocalDateTime departure_time;
 	private LocalDateTime arrival_time;
 	

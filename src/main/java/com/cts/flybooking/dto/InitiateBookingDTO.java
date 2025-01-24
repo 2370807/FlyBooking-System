@@ -2,7 +2,11 @@ package com.cts.flybooking.dto;
 
 import java.time.LocalDate;
 
+import com.cts.flybooking.model.Flight;
+
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -14,6 +18,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class InitiateBookingDTO {
 	
+
+	
 	@NotNull(message="UserId cannot be null")
 	private long userId;
 	
@@ -23,9 +29,10 @@ public class InitiateBookingDTO {
 	@NotNull(message="Seatnumber cannot be null")
 	private long seatnumber;
 	
-	@Future(message="Booking Date cannot be in present or in past")
+	@FutureOrPresent(message="Booking Date cannot be in past")
 	private LocalDate BookingDate;
 	
 	@NotNull(message="Seatclass must have value")
 	private String Seatclass;
+	
 }

@@ -11,6 +11,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.cts.flybooking.service.UserService;
 
@@ -34,11 +39,24 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
 	{
 		http.csrf((csrf)-> csrf.disable())
+		.cors(Customizer.withDefaults())
 		.authorizeHttpRequests((authorize)->authorize
-			.requestMatchers("/Passenger/register","/Passenger/login/**","/Booking/intiatebooking/**").permitAll()
+			.requestMatchers("/Passenger/register/**",
+					"/Passenger/login",
+					"/Booking/intiatebooking/**",
+					"/flight/sources",
+					"/flight/destinations",
+					"/flight/flightbysourceanddestination/**",
+					"/flight/allflight",
+					"/flight/flightbysourceanddestinationanddate/**",
+					"/Booking/BookingByFlight/**",
+					"/Booking/BookingByUser/**",
+					"/cancel/**",
+					"/Passenger/remove/**").permitAll()
 			.anyRequest().authenticated()
 		)
-		.formLogin(Customizer.withDefaults())
+//		.formLogin(Customizer.withDefaults())
+		.formLogin((form)->form.disable())
 		.httpBasic(Customizer.withDefaults());
 		return http.build();
 	}
@@ -51,4 +69,20 @@ public class SecurityConfig {
 		authenticationProvider.setPasswordEncoder(passwordEncoder());
 		return authenticationProvider;
 	}
+	
+
+	@Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**") // Allow all endpoints
+                        .allowedOrigins("http://localhost:3000") // Allow React frontend
+                        .allowedMethods("GET", "POST", "PUT", "DELETE") // Allowed HTTP methods
+                        .allowedHeaders("*") // Allow all headers
+                        .allowCredentials(true); // Allow credentials (e.g., cookies, authorization headers)
+            }
+        };
+    }
+
 }

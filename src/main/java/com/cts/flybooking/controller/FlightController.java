@@ -1,11 +1,15 @@
 package com.cts.flybooking.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,10 +29,10 @@ public class FlightController {
 	private FlightService flightService;
 	
 	@GetMapping("/allflight")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public List<Flight> findallFlight()
 	{
-		return flightService.findAllflight();
+            return flightService.findAllflight();
 	}
 	
 	@PostMapping("/newflight")
@@ -60,10 +64,29 @@ public class FlightController {
 		return flightService.findflightById(flightid);
 	}
 	
-	@GetMapping("/flightbysourceanddesination/{source}/{desination}")
-	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+	@GetMapping("/flightbysourceanddestination/{source}/{desination}")
+	//@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	public List<Flight> findbysourceAnddesination(@PathVariable String source,@PathVariable String desination)
 	{
 		return flightService.findFlightBySourceAndDesitnation(source, desination);
 	}
+	
+	@GetMapping("/sources")
+    public ResponseEntity<List<String>> getAllSources() {
+       return flightService.getAllFlightFromSource();
+    }
+
+    // Get all unique destinations
+    @GetMapping("/destinations")
+    public ResponseEntity<List<String>> getAllDestinations() {
+        return flightService.getAllFlightFromDestinations();
+    }
+    
+    @GetMapping("/flightbysourceanddestinationanddate/{source}/{destination}/{departureDate}")
+    public List<Flight> findFlightsBySourceDestinationAndDate(
+        @PathVariable String source,
+        @PathVariable String destination,
+        @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate departureDate) {
+        return flightService.findFlightsBySourceDestinationAndDate(source, destination, departureDate);
+    }
 }

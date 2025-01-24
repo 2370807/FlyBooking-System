@@ -18,6 +18,6 @@ public class PriceDTO {
 	@NotBlank(message="class name should be given")
 	private String classname;
 	
-	@Min(1)
+	
 	private int no_of_seats;
 }

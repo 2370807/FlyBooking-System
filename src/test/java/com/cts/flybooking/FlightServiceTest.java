@@ -45,7 +45,7 @@ public class FlightServiceTest {
 			flightDTO.setAirline("Test Airline"); 
 			flightDTO.setArrival_time((LocalDateTime.of(2024, 12, 25, 10, 30))); 
 			flightDTO.setDeparture_time((LocalDateTime.of(2024, 12, 25, 12, 30))); 
-			flightDTO.setDesitination("Desitination");
+			flightDTO.setDestination("Desitination");
 			flightDTO.setSource("Source"); 
 			
 			flight = new Flight();
@@ -53,7 +53,7 @@ public class FlightServiceTest {
 			flight.setAirline("Test Airline"); 
 			flight.setArrival_time((LocalDateTime.of(2024, 12, 25, 10, 30))); 
 			flight.setDeparture_time((LocalDateTime.of(2024, 12, 25, 12, 30))); 
-			flight.setDesination("Desitination");
+			flight.setDestination("Desitination");
 			flight.setSource("Source"); 
 		}
 		

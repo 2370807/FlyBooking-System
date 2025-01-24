@@ -1,5 +1,7 @@
 package com.cts.flybooking.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,17 +37,22 @@ public class FlightServiceImpl implements FlightService {
 	public ResponseEntity<String> createflight(FlightDTO flightdto) {
 		// TODO Auto-generated method stub
 		logger.info("Creating flight with flight number: {}", flightdto.getFlightnumber());
+		if(flightRepository.findByFlightnumber(flightdto.getFlightnumber()).isEmpty()) {
 		Flight flight=Flight.builder()
 				.flightnumber(flightdto.getFlightnumber())
 				.airline(flightdto.getAirline())
 				.arrival_time(flightdto.getArrival_time())
 				.departure_time(flightdto.getDeparture_time())
-				.desination(flightdto.getDesitination())
+				.destination(flightdto.getDestination())
 				.source(flightdto.getSource())
 				.build();
 		flightRepository.save(flight);
 		logger.info("Flight with flight number: {} added to list successfully", flightdto.getFlightnumber());
-		return ResponseEntity.status(HttpStatus.OK).body("Flight added to list Successfully");
+		return ResponseEntity.status(HttpStatus.OK).body("Flight added to list Successfully");}
+		else
+		{
+			return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Flight already exist");
+		}
 	}
 
 	@Override
@@ -57,7 +65,7 @@ public class FlightServiceImpl implements FlightService {
 				.airline(flightdto.getAirline())
 				.arrival_time(flightdto.getArrival_time())
 				.departure_time(flightdto.getDeparture_time())
-				.desination(flightdto.getDesitination())
+				.destination(flightdto.getDestination())
 				.source(flightdto.getSource())
 				.flightnumber(flightdto.getFlightnumber())//--changed
 				.build();
@@ -100,13 +108,38 @@ public class FlightServiceImpl implements FlightService {
 	@Override
 	public List<Flight> findAllflight() {
 		// TODO Auto-generated method stub
-		logger.info("Finding all flights");		
-		return flightRepository.findAll();
+	    return flightRepository.findAll();
 	}
 	@Override
 	public List<Flight> findFlightBySourceAndDesitnation(String source,String desination)
 	{
 		logger.info("Finding flight from source: {} to destination: {}", source, desination);
-		return flightRepository.findBySourceAndDesination(source, desination);
+		return flightRepository.findBySourceAndDestination(source, desination);
+	}
+
+	@Override
+	public ResponseEntity<List<String>> getAllFlightFromSource() {
+		// TODO Auto-generated method stub List<String> sources = flightRepository.findDistinctSources();
+		 List<String> sources = flightRepository.findDistinctSource();
+	     return ResponseEntity.ok(sources); 
+	}
+
+	@Override
+	public ResponseEntity<List<String>> getAllFlightFromDestinations() {
+		// TODO Auto-generated method stub
+		List<String> destinations = flightRepository.findDistinctDestination();
+        return ResponseEntity.ok(destinations);
+	}
+	
+	@Override
+	public List<Flight> findFlightsBySourceDestinationAndDate(String source, String destination, LocalDate departureDate) {
+	        return flightRepository.findBySourceAndDestinationAndDepartureTime(source, destination, departureDate);
+	    }
+
+	@Override
+	public List<Flight> findFutureFlights() {
+		// TODO Auto-generated method stub
+		 LocalDateTime now = LocalDateTime.now();
+	     return flightRepository.findByDepartureTimeGreaterThanEqual(now);
 	}
 }

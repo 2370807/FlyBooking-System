@@ -13,6 +13,8 @@ import lombok.ToString;
 @ToString
 public class BookingDTO {
 	
+	private long bookingId;
+	
 	private String username; 
 	
 //	private String firstName; 

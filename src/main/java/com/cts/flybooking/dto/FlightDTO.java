@@ -1,6 +1,9 @@
 package com.cts.flybooking.dto;
 
 import java.time.LocalDateTime;
+
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -26,15 +29,15 @@ public class FlightDTO {
 	private String source;
 	
 	@NotBlank(message="Destination cannot be blank")
-	private String desitination;
+	private String destination;
 	
 	//@NotBlank(message="Departure time cannot be empty")
-//	@Future(message = "The end time must be in the future")
+	@FutureOrPresent(message = "The start time must be in the future")
 	@NotNull
 	private LocalDateTime departure_time;
 	
 	//@NotBlank(message="Arrival time cannot be empty")
-//	@Future(message = "The start time must be in the future")
+	@FutureOrPresent(message = "The end time must be in the future")
 	@NotNull
 	private LocalDateTime arrival_time;
 

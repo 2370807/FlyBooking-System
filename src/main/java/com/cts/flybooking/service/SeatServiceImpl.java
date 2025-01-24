@@ -1,6 +1,8 @@
 package com.cts.flybooking.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cts.flybooking.dto.DispSeatDTO;
 import com.cts.flybooking.dto.SeatDTO;
 import com.cts.flybooking.model.Flight;
 import com.cts.flybooking.model.Price;
@@ -57,15 +60,16 @@ public class SeatServiceImpl implements SeatService  {
 		}
 		else
 		{
-			 return ResponseEntity.status(HttpStatus.OK).body("This seatnumber "+(Long.valueOf(seatDTO.getSeatnumber()))+" already exist in "+seatDTO.getFightnumber()+" flight");
+			 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This seatnumber "+(Long.valueOf(seatDTO.getSeatnumber()))+" already exist in "+seatDTO.getFightnumber()+" flight");
 		}
 	}
 
 	@Override
-	public List<Seat> getAvailableSeats(String flightnumber) { //need to check
+	public List<DispSeatDTO> getAvailableSeats(String flightnumber) { //need to check
 		// TODO Auto-generated method stub
 		logger.info("Fetching available seats for flight number: {}", flightnumber);
-		return seatRepository.findByFlight_FlightnumberAndIsavailable(flightnumber, true);
+		List<Seat> seats=seatRepository.findByFlight_FlightnumberAndIsavailable(flightnumber, true);
+		return seats.stream().map(this::convertToDispSeatDTO).collect(Collectors.toList());
 	}
 
 	@Override
@@ -79,9 +83,36 @@ public class SeatServiceImpl implements SeatService  {
 	}
 	
 	@Override
-	public List<Seat> findAll(String flightnumber) {
+	public List<DispSeatDTO> findAll(String flightnumber) {
 		// TODO Auto-generated method stub
 		logger.info("Fetching all seats for flight number: {}", flightnumber);
-		return seatRepository.findByFlight_Flightnumber(flightnumber);
+		List<Seat> seats=seatRepository.findByFlight_Flightnumber(flightnumber);
+		return seats.stream().map(this::convertToDispSeatDTO).collect(Collectors.toList());	
 	}
+	
+	public DispSeatDTO convertToDispSeatDTO(Seat seat)
+	{ 
+		DispSeatDTO dispSeatDTO =new DispSeatDTO();
+		dispSeatDTO.setSeatnumber(seat.getSeatnumber());
+		dispSeatDTO.setIsavailable(seat.isIsavailable());
+		dispSeatDTO.setPrice(seat.getPrice().getPrice()); 
+		dispSeatDTO.setSeatnumber(seat.getSeatnumber()); 
+		dispSeatDTO.setSeatId(seat.getId()); 
+		dispSeatDTO.setClassname(seat.getPrice().getClassname());
+		logger.debug("Converted Seat to DispSeatDTO: {}", dispSeatDTO);
+		return dispSeatDTO; 
+	}
+
+	@Override
+	public Seat updateseat(String flightnumber,SeatDTO seatDTO) {
+		// TODO Auto-generated method stub
+		Price price=priceRepository.findByClassname(seatDTO.getSeatclass()).orElseThrow(()->new RuntimeException("SeatClass not found"));
+		// Flight flight=flightRepository.findByFlightnumber(seatDTO.getFightnumber()).orElseThrow(()->new RuntimeException("Flight not found"));
+		Seat seat=seatRepository.findByFlight_FlightnumberAndSeatnumberAndPrice_Classname(seatDTO.getFightnumber(),Long.valueOf(seatDTO.getSeatnumber()),seatDTO.getSeatclass());
+		seat.setSeatnumber(Long.valueOf(seatDTO.getSeatnumber()));
+		seat.setIsavailable(seatDTO.isIsavailable());
+		seat.setPrice(price);
+		return 	seatRepository.save(seat);
+	}
+	
 }

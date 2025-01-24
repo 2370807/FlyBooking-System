@@ -50,7 +50,10 @@ public class BookingServiceImpl implements BookingService{
 				.orElseThrow(() -> new RuntimeException("User not found")); 
 		Flight flight = flightRepository.findByFlightnumber(initiateBookingDTO.getFlightnumber())
 				.orElseThrow(() -> new RuntimeException("Flight not found")); 
-		Seat seat = seatRepository.findByFlight_FlightnumberAndSeatnumberAndPrice_Classname(initiateBookingDTO.getFlightnumber(),initiateBookingDTO.getSeatnumber(),initiateBookingDTO.getSeatclass()); 
+		Seat seat = seatRepository.findByFlight_FlightnumberAndSeatnumberAndPrice_Classname(initiateBookingDTO.getFlightnumber(),initiateBookingDTO.getSeatnumber(),initiateBookingDTO.getSeatclass());
+		if (!isBookingDateValid(initiateBookingDTO.getFlightnumber(),initiateBookingDTO.getBookingDate())) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Booking date cannot be after the departure date");
+	    }
 		Booking booking = new Booking(); 
 		booking.setUser(user);
 		booking.setFlight(flight); 
@@ -87,11 +90,12 @@ public class BookingServiceImpl implements BookingService{
 	public BookingDTO convertToBookingDTO(Booking booking)
 	{ 
 		BookingDTO bookingDTO = new BookingDTO();
+		bookingDTO.setBookingId(booking.getId());
 		bookingDTO.setUsername(booking.getUser().getName()); 
 		bookingDTO.setFlightNumber(booking.getFlight().getFlightnumber()); 
 		bookingDTO.setAirline(booking.getFlight().getAirline()); 
 		bookingDTO.setSource(booking.getFlight().getSource()); 
-		bookingDTO.setDestination(booking.getFlight().getDesination()); 
+		bookingDTO.setDestination(booking.getFlight().getDestination()); 
 		bookingDTO.setSeatNumber(booking.getSeat().getSeatnumber()); 
 		bookingDTO.setBookingDate(booking.getBookingDate()); 
 		bookingDTO.setStatus(booking.getStatus()); 
@@ -108,7 +112,7 @@ public class BookingServiceImpl implements BookingService{
 		logger.info("Cancelling booking with bookingId: {}",bookingId);
 		Booking booking = bookingRepository.findById(bookingId) 
 				.orElseThrow(() -> new RuntimeException("Booking not found"));
-		booking.setStatus("CANCELED"); 
+		booking.setStatus("CANCELLED"); 
 		bookingRepository.save(booking); 
 
 		Seat seat = booking.getSeat(); 
@@ -148,18 +152,28 @@ public class BookingServiceImpl implements BookingService{
 	}
 	
 	@Override
-	public void cancelBookingByCompany(String flightnumber)
+	public void cancelBookingByCompany(long bookingId)
 	{ 
-		List<Booking> bookings = bookingRepository.findByFlight_Flightnumber(flightnumber); 
-		if (bookings.isEmpty()) 
-		{ 
-			throw new RuntimeException("No bookings found for this flight"); 
-		} 
-		for (Booking booking : bookings) 
-		{ 
-			booking.setStatus("Cancelled by Company");
-			bookingRepository.save(booking);
-		}
+		Booking bookings = bookingRepository.findById(bookingId).orElseThrow(()-> new RuntimeException("Booking Not Found")); 
+		bookings.setStatus("Cancelled by Company");
+		bookingRepository.save(bookings);
+		Seat seat = bookings.getSeat(); 
+		seat.setIsavailable(true);
+		seatRepository.save(seat);
+	}
+	
+	public boolean isBookingDateValid(String flightnumber,LocalDate bookingDate) {
+        Flight flight = flightRepository.findByFlightnumber(flightnumber)
+            .orElseThrow(() -> new RuntimeException("Flight not found"));
+        return !bookingDate.isAfter(flight.getDeparture_time().toLocalDate());
+    }
+
+	@Override
+	public List<BookingDTO> getBookingsByFlight(String flightNumber) {
+		// TODO Auto-generated method stub
+		List<Booking> bookings=bookingRepository.findByFlight_Flightnumber(flightNumber);
+		//List<Booking> bookings = bookingRepository.findByUser_Id(userId); 
+		return bookings.stream().map(this::convertToBookingDTO).collect(Collectors.toList()); 
 	}
 	
 }

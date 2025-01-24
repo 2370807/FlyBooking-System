@@ -1,6 +1,7 @@
  package com.cts.flybooking.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cts.flybooking.dto.LoginDTO;
 import com.cts.flybooking.dto.PassengerDTO;
+import com.cts.flybooking.dto.PassengerUpdateDTO;
 import com.cts.flybooking.model.Passenger;
 import com.cts.flybooking.service.PassengerService;
 
@@ -37,7 +40,7 @@ public class PassengerController {
 	 
 	 
 	 @GetMapping("/GetById/{id}")
-	 @PreAuthorize("hasRole('ROLE_ADMIN')")
+	 @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	 public Passenger getUserbyId(@PathVariable("id") Long userId)
 	 {
 		 return userService.findbyId(userId);
@@ -45,8 +48,8 @@ public class PassengerController {
 	 
 	 
 	 @PutMapping("/UpdatePassenger/{id}")
-	 @PreAuthorize("hasRole('ROLE_USER')")
-	 public Passenger updateUser(@PathVariable("id") Long userId, @RequestBody @Valid  PassengerDTO userdto)
+	 @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+	 public Passenger updateUser(@PathVariable("id") Long userId, @RequestBody @Valid  PassengerUpdateDTO userdto)
 	 {
 		 return userService.update(userId,userdto);
 	 }
@@ -59,15 +62,14 @@ public class PassengerController {
 	 }
 	 
 	 
-	 @GetMapping("/login/{useremail}/{password}")
-	 public ResponseEntity<String> loginUser(@PathVariable("useremail") String useremail,@PathVariable("password") String password)
+	 @PostMapping("/login")
+	 public ResponseEntity<Passenger> loginUser(@RequestBody @Valid LoginDTO logindto)
 	 {
-		 return userService.loginUser(useremail,password);
+		 return userService.loginUser(logindto.getUsername(),logindto.getPassword());
 	 }
 	 
 	 
 	 @DeleteMapping("/remove/{id}")
-	 @PreAuthorize("hasRole('ROLE_ADMIN')")
 	 public void Removeuser(@PathVariable("id") Long userId)
 	 {
 		 userService.delete(userId);

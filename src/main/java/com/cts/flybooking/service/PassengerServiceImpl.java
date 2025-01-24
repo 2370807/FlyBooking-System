@@ -1,17 +1,22 @@
 package com.cts.flybooking.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.cts.flybooking.dto.PassengerDTO;
+import com.cts.flybooking.dto.PassengerUpdateDTO;
 import com.cts.flybooking.model.Passenger;
 import com.cts.flybooking.repository.PassengerRepository;
 @Service
@@ -38,13 +43,12 @@ public class PassengerServiceImpl implements PassengerService {
 	}
 
 	@Override
-	public Passenger update(long userId,PassengerDTO userdto) //--changed
+	public Passenger update(long userId,PassengerUpdateDTO userdto) //--changed
 	{
 		logger.info("Updating passenger with id: {}", userId);
 		Passenger user=userRepository.findById(userId)
 				.orElseThrow(()->new RuntimeException("Passenger not found"));
 		user.setName(userdto.getName());
-		user.setPassword(passwordEncode.encode(userdto.getPassword()));
 		user.setPhonenumber(userdto.getPhonenumber());
 		user.setUseremail(userdto.getUseremail());
 		user.setUsername(userdto.getUsername());
@@ -69,7 +73,7 @@ public class PassengerServiceImpl implements PassengerService {
 		{
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already exist");
 		}
-		if(userRepository.findByUsername(userdto.getUsername())!=null)
+		if(userRepository.existsByUsername(userdto.getUsername()))
 		{
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already taken");
 		}
@@ -84,26 +88,27 @@ public class PassengerServiceImpl implements PassengerService {
 		userRepository.save(user);
 		logger.info("User with username: {} created successfully", userdto.getUsername());
 		return ResponseEntity.status(HttpStatus.OK).body("Registeration successful");
+		
 	}
 	
 	@Override
-	public ResponseEntity<String> loginUser(String username, String password) {
+	public ResponseEntity<Passenger> loginUser(String username, String password) {
 		// TODO Auto-generated method stub
 		logger.info("User login attempt with username: {}",username);
-		Passenger user =userRepository.findByUsername(username);
-		if(user==null)
-		{
-			return ResponseEntity.status(404).body("User not found please register");
-		}
+		Passenger user =userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not foud please register"));
+//		if(user==null)
+//		{
+//			return ResponseEntity.status(404).body("User not found please register");
+//		}
 		boolean passwordmatch =passwordEncode.matches(password,user.getPassword());
 		if(passwordmatch)
 		{
 			logger.info("Login successful for username: {}",username);
-			return ResponseEntity.ok("Login successful");
+			return ResponseEntity.status(HttpStatus.OK).body(user);
 		}
 		else {
 			logger.warn("Invalid password for username: {}", username);
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid useremail or password");}
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);}
 	}
 
 
