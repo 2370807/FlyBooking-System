@@ -14,6 +14,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 	List<Booking> findByUser_Id(long userId);
 
 	List<Booking> findByFlight_Flightnumber(String flightnumber);
+	
+
+	List<Booking> findByFlight_FlightnumberAndSeat_SeatnumberAndSeat_Price_Classname(String fightnumber, long seatnumber,
+			String seatclass);
 
 //	@Modifying 
 //	@Transactional

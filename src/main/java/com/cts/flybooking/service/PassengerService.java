@@ -18,7 +18,7 @@ public interface PassengerService {
 
 	public Passenger update(long userId,PassengerUpdateDTO user);
 
-	public ResponseEntity<Passenger> loginUser(String username, String password);
+	public ResponseEntity<?> loginUser(String username, String password);
 
 	public void delete(long userId);
 

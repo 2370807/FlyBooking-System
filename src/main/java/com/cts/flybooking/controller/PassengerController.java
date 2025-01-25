@@ -63,7 +63,7 @@ public class PassengerController {
 	 
 	 
 	 @PostMapping("/login")
-	 public ResponseEntity<Passenger> loginUser(@RequestBody @Valid LoginDTO logindto)
+	 public ResponseEntity<?> loginUser(@RequestBody @Valid LoginDTO logindto)
 	 {
 		 return userService.loginUser(logindto.getUsername(),logindto.getPassword());
 	 }

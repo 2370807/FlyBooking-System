@@ -15,10 +15,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.cts.flybooking.dto.LoginResponseDTO;
 import com.cts.flybooking.dto.PassengerDTO;
 import com.cts.flybooking.dto.PassengerUpdateDTO;
 import com.cts.flybooking.model.Passenger;
 import com.cts.flybooking.repository.PassengerRepository;
+import com.cts.flybooking.security.JwtUtils;
 @Service
 public class PassengerServiceImpl implements PassengerService {
 	
@@ -29,6 +31,9 @@ public class PassengerServiceImpl implements PassengerService {
 	
 	@Autowired
 	public PasswordEncoder passwordEncode;
+	
+	@Autowired
+	public JwtUtils jwtUtils;
 	
 	@Override
 	public List<Passenger> findAll() {
@@ -92,7 +97,7 @@ public class PassengerServiceImpl implements PassengerService {
 	}
 	
 	@Override
-	public ResponseEntity<Passenger> loginUser(String username, String password) {
+	public ResponseEntity<?> loginUser(String username, String password) {
 		// TODO Auto-generated method stub
 		logger.info("User login attempt with username: {}",username);
 		Passenger user =userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not foud please register"));
@@ -104,7 +109,12 @@ public class PassengerServiceImpl implements PassengerService {
 		if(passwordmatch)
 		{
 			logger.info("Login successful for username: {}",username);
-			return ResponseEntity.status(HttpStatus.OK).body(user);
+			String token= jwtUtils.generateToken(user);
+			LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
+			loginResponseDTO.setToken(token);
+			loginResponseDTO.setRole(user.getRoles());
+			loginResponseDTO.setUser_id(user.getId());
+			return ResponseEntity.status(HttpStatus.OK).body(loginResponseDTO);
 		}
 		else {
 			logger.warn("Invalid password for username: {}", username);

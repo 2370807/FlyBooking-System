@@ -13,9 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cts.flybooking.dto.DispSeatDTO;
 import com.cts.flybooking.dto.SeatDTO;
+import com.cts.flybooking.model.Booking;
 import com.cts.flybooking.model.Flight;
 import com.cts.flybooking.model.Price;
 import com.cts.flybooking.model.Seat;
+import com.cts.flybooking.repository.BookingRepository;
 import com.cts.flybooking.repository.FlightRepository;
 import com.cts.flybooking.repository.PriceRepository;
 import com.cts.flybooking.repository.SeatRepository;
@@ -35,6 +37,8 @@ public class SeatServiceImpl implements SeatService  {
 	@Autowired
 	private PriceRepository priceRepository;
 	
+	@Autowired
+	private BookingRepository bookingRepository;
 	
 	@Override
 	public ResponseEntity<String> createSeat(SeatDTO seatDTO) {
@@ -110,6 +114,16 @@ public class SeatServiceImpl implements SeatService  {
 		// Flight flight=flightRepository.findByFlightnumber(seatDTO.getFightnumber()).orElseThrow(()->new RuntimeException("Flight not found"));
 		Seat seat=seatRepository.findByFlight_FlightnumberAndSeatnumberAndPrice_Classname(seatDTO.getFightnumber(),Long.valueOf(seatDTO.getSeatnumber()),seatDTO.getSeatclass());
 		seat.setSeatnumber(Long.valueOf(seatDTO.getSeatnumber()));
+		if(seatDTO.isIsavailable()==true)
+		{
+			if(seat.isIsavailable()==false)
+			{
+				List<Booking> bookings = bookingRepository.findByFlight_FlightnumberAndSeat_SeatnumberAndSeat_Price_Classname(seatDTO.getFightnumber(),seat.getSeatnumber(),seatDTO.getSeatclass()); // Fetch booking from the database
+				for(Booking booking:bookings) {
+					booking.setStatus("Cancelled by Company");
+				}
+			}
+		}
 		seat.setIsavailable(seatDTO.isIsavailable());
 		seat.setPrice(price);
 		return 	seatRepository.save(seat);
